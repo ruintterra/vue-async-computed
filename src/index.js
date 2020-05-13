@@ -1,3 +1,4 @@
+import { isEqual } from 'lodash-es'
 import {
   initLazy,
   isComputedLazy,
@@ -71,7 +72,9 @@ const AsyncComputed = {
 
 function handleAsyncComputedPropetyChanges (vm, key, pluginOptions, Vue) {
   let promiseId = 0
-  const watcher = newPromise => {
+  const watcher = (newPromise, oldPromise) => {
+    if (isEqual(newPromise, oldPromise)) return
+
     const thisPromise = ++promiseId
 
     if (shouldNotUpdate(newPromise)) return
